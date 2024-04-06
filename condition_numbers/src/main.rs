@@ -1,3 +1,7 @@
+mod condition;
+
+use ndarray::array;
+
 fn main() {
-    //let matrix = ndarr
+    let a = array![[1, 2], [3, 4]];
 }

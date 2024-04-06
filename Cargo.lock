@@ -24,6 +24,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "assert_approx_eq"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c07dab4369547dbe5114677b33fbbf724971019f3818172d59a97a61c774ffd"
+
+[[package]]
 name = "autocfg"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -90,6 +96,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 name = "computational-workshop"
 version = "0.1.0"
 dependencies = [
+ "assert_approx_eq",
  "ndarray",
  "ndarray-linalg",
 ]
@@ -97,6 +104,11 @@ dependencies = [
 [[package]]
 name = "condition_numbers"
 version = "0.1.0"
+dependencies = [
+ "assert_approx_eq",
+ "ndarray",
+ "ndarray-linalg",
+]
 
 [[package]]
 name = "core-foundation"
