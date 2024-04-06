@@ -1,5 +1,5 @@
 use condition_numbers::euclidean_norm;
-use ndarray::{Array2, ArrayView2, Axis};
+use ndarray::{ArrayView2, Axis};
 use ndarray_linalg::{Determinant, Inverse};
 use std::error::Error;
 
@@ -18,7 +18,7 @@ fn volume_criterion(matrix: &ArrayView2<f64>) -> Result<f64, Box<dyn Error>> {
         / det.abs())
 }
 
-fn angle_criterion(matrix: &Array2<f64>) -> Result<f64, Box<dyn Error>> {
+fn angle_criterion(matrix: &ArrayView2<f64>) -> Result<f64, Box<dyn Error>> {
     let inverse = matrix.inv()?;
     matrix
         .axis_iter(Axis(0))
@@ -34,7 +34,7 @@ fn angle_criterion(matrix: &Array2<f64>) -> Result<f64, Box<dyn Error>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::condition::volume_criterion;
+    use crate::condition::{angle_criterion, volume_criterion};
     use assert_approx_eq::assert_approx_eq;
     use ndarray::array;
     use ndarray_linalg::Determinant;
@@ -47,5 +47,14 @@ mod tests {
 
         let ortega = volume_criterion(&matrix.view()).unwrap();
         assert_approx_eq!(5.0 * 5.0_f64.sqrt() / det, ortega, f64::EPSILON)
+    }
+
+    #[test]
+    fn angle_test() {
+        let matrix = array![[1.0, 2.0], [3.0, 4.0]];
+        let inverse = array![[-2.0, 1.0], [1.5, -0.5]];
+
+        let angle = angle_criterion(&matrix.view()).unwrap();
+        assert_approx_eq!(angle, 5.0 * 2.5_f64.sqrt(), f64::EPSILON)
     }
 }
