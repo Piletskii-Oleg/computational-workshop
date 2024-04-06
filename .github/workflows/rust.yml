@@ -1,0 +1,27 @@
+name: Build and test
+
+on: push
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - run: cargo build --verbose
+    - run: cd condition_numbers && cargo build --verbose
+    
+  test:
+    name: Run tests
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - run: cargo test --verbose
+    - run: cd condition_numbers && cargo test --verbose
