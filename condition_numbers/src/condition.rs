@@ -2,6 +2,7 @@ use crate::euclidean_norm;
 use ndarray::{ArrayView2, Axis};
 use ndarray_linalg::{Determinant, Inverse};
 use std::error::Error;
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct ConditionNumbers {
@@ -20,6 +21,13 @@ impl ConditionNumbers {
             volume,
             angle,
         })
+    }
+}
+
+impl Display for ConditionNumbers {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Спектральное число обусловленности: {:.3}\nОбъемное число обусловленности: {:.3}\nУгловое число обусловленности: {:.3}",
+        self.spectre, self.volume, self.angle)
     }
 }
 
@@ -65,7 +73,6 @@ mod tests {
         let det: f64 = matrix.det().unwrap();
         let det = det.abs();
 
-        let a = spectre_criterion(matrix.view());
         let ortega = volume_criterion(matrix.view()).unwrap();
         assert_approx_eq!(5.0 * 5.0_f64.sqrt() / det, ortega, f64::EPSILON)
     }
@@ -73,7 +80,7 @@ mod tests {
     #[test]
     fn angle_test() {
         let matrix = array![[1.0, 2.0], [3.0, 4.0]];
-        let inverse = array![[-2.0, 1.0], [1.5, -0.5]];
+        let _inverse = array![[-2.0, 1.0], [1.5, -0.5]];
 
         let angle = angle_criterion(matrix.view()).unwrap();
         assert_approx_eq!(angle, 5.0 * 2.5_f64.sqrt(), f64::EPSILON)
