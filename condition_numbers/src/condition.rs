@@ -62,7 +62,7 @@ fn angle_criterion(matrix: ArrayView2<f64>) -> Result<f64, Box<dyn Error>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::condition::{angle_criterion, spectre_criterion, volume_criterion};
+    use crate::condition::{angle_criterion, volume_criterion};
     use assert_approx_eq::assert_approx_eq;
     use ndarray::array;
     use ndarray_linalg::Determinant;
