@@ -1,11 +1,17 @@
 mod condition;
+mod examples;
 
 pub use condition::*;
+pub use examples::*;
 
-use ndarray::{ArrayView, Dimension};
+use ndarray::{Array, ArrayView, Dimension};
 
 pub fn euclidean_norm<D: Dimension>(matrix: ArrayView<f64, D>) -> f64 {
     matrix.iter().map(|&a| a * a).sum::<f64>().sqrt()
+}
+
+pub fn add_number<D: Dimension>(matrix: ArrayView<f64, D>, number: f64) -> Array<f64, D> {
+    matrix.map(|&a| a + number)
 }
 
 #[cfg(test)]
