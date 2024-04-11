@@ -4,7 +4,8 @@ mod examples;
 pub use condition::*;
 pub use examples::*;
 
-use ndarray::{Array, ArrayView, Dimension};
+use ndarray::{Array, ArrayView, ArrayView1, ArrayView2, Dimension};
+use prettytable::{Cell, Row, Table};
 
 pub fn euclidean_norm<D: Dimension>(matrix: ArrayView<f64, D>) -> f64 {
     matrix.iter().map(|&a| a * a).sum::<f64>().sqrt()
@@ -12,6 +13,34 @@ pub fn euclidean_norm<D: Dimension>(matrix: ArrayView<f64, D>) -> f64 {
 
 pub fn add_number<D: Dimension>(matrix: ArrayView<f64, D>, number: f64) -> Array<f64, D> {
     matrix.map(|&a| a + number)
+}
+
+pub fn print_matrix(matrix: ArrayView2<f64>) {
+    let mut table = Table::new();
+    matrix
+        .rows()
+        .into_iter()
+        .map(|row| {
+            row.iter()
+                .map(|num| Cell::new(&format!("{:.4}", num)))
+                .collect::<Vec<Cell>>()
+        })
+        .map(Row::new)
+        .for_each(|row| {
+            table.add_row(row);
+        });
+    table.printstd()
+}
+
+pub fn print_vector(vector: ArrayView1<f64>) {
+    let mut table = Table::new();
+    vector
+        .iter()
+        .map(|num| Cell::new(&format!("{:.4}", num)))
+        .for_each(|cell| {
+            table.add_row(Row::new(vec![cell]));
+        });
+    table.printstd()
 }
 
 #[cfg(test)]

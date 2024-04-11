@@ -9,3 +9,4 @@ edition = "2021"
 ndarray = "0.15.6"
 ndarray-linalg = { version = "0.16", features = ["openblas"] }
 assert_approx_eq = "1.1.0"
+prettytable-rs = "0.10"

@@ -1,6 +1,7 @@
 use crate::euclidean_norm;
 use ndarray::{ArrayView2, Axis};
 use ndarray_linalg::{Determinant, Inverse};
+use prettytable::{row, Row};
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
@@ -28,6 +29,16 @@ impl Display for ConditionNumbers {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "Спектральное число обусловленности: {:.3}\nОбъемное число обусловленности: {:.3}\nУгловое число обусловленности: {:.3}",
         self.spectre, self.volume, self.angle)
+    }
+}
+
+impl From<ConditionNumbers> for Row {
+    fn from(value: ConditionNumbers) -> Self {
+        row![
+            format!("{:.3}", value.spectre),
+            format!("{:.3}", value.volume),
+            format!("{:.3}", value.angle)
+        ]
     }
 }
 
