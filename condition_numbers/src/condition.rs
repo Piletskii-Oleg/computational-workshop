@@ -1,9 +1,9 @@
-use crate::euclidean_norm;
-use ndarray::{ArrayView2, Axis};
-use ndarray_linalg::{Determinant, Inverse};
-use prettytable::{row, Row};
 use std::error::Error;
 use std::fmt::{Display, Formatter};
+
+use ndarray::{ArrayView2, Axis};
+use ndarray_linalg::{Determinant, Inverse, Norm};
+use prettytable::{row, Row};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct ConditionNumbers {
@@ -44,7 +44,7 @@ impl From<ConditionNumbers> for Row {
 
 fn spectre_criterion(matrix: ArrayView2<f64>) -> Result<f64, Box<dyn Error>> {
     let inverse = matrix.inv()?;
-    let spectre = euclidean_norm(matrix) * euclidean_norm(inverse.view());
+    let spectre = matrix.norm() * inverse.view().norm();
     Ok(spectre)
 }
 
@@ -62,7 +62,7 @@ fn angle_criterion(matrix: ArrayView2<f64>) -> Result<f64, Box<dyn Error>> {
     matrix
         .axis_iter(Axis(0))
         .zip(inverse.axis_iter(Axis(0)))
-        .map(|(row, inv)| euclidean_norm(row) * euclidean_norm(inv))
+        .map(|(row, inv)| row.norm() * inv.norm())
         .max_by(|a, b| a.total_cmp(b))
         .ok_or(
             "angle criterion - something went wrong... probably NaN found"
@@ -73,10 +73,11 @@ fn angle_criterion(matrix: ArrayView2<f64>) -> Result<f64, Box<dyn Error>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::condition::{angle_criterion, volume_criterion};
     use assert_approx_eq::assert_approx_eq;
     use ndarray::array;
     use ndarray_linalg::Determinant;
+
+    use crate::condition::{angle_criterion, volume_criterion};
 
     #[test]
     fn ortega_test() {
