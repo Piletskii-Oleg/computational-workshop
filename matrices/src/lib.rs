@@ -4,7 +4,7 @@ pub use examples::*;
 
 mod examples;
 
-pub fn generate_matrix(n: usize, generator: fn(usize, usize) -> f64) -> Array2<f64> {
+pub fn generate_matrix<F: Fn(usize, usize) -> f64>(n: usize, generator: F) -> Array2<f64> {
     let matrix = (0..n)
         .map(|row| (0..n).map(|column| generator(row, column)).collect())
         .collect::<Vec<Vec<f64>>>();

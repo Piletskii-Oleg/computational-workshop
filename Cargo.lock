@@ -97,7 +97,7 @@ name = "condition_numbers"
 version = "0.1.0"
 dependencies = [
  "assert_approx_eq",
-    "matrices",
+ "matrices",
  "ndarray",
  "ndarray-linalg",
  "prettytable-rs",
@@ -374,19 +374,19 @@ checksum = "90ed8c1e510134f979dbc4f070f87d4313098b704861a105fe34231c70a3901c"
 name = "matrices"
 version = "0.1.0"
 dependencies = [
-    "ndarray",
-    "ndarray-linalg",
-    "rand",
+ "ndarray",
+ "ndarray-linalg",
+ "rand",
 ]
 
 [[package]]
 name = "matrix_solver"
 version = "0.1.0"
 dependencies = [
-    "condition_numbers",
-    "matrices",
-    "ndarray",
-    "ndarray-linalg",
+ "condition_numbers",
+ "matrices",
+ "ndarray",
+ "ndarray-linalg",
 ]
 
 [[package]]
