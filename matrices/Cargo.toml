@@ -1,12 +1,11 @@
 [package]
-name = "matrix_solver"
+name = "matrices"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-condition_numbers = { path = "../condition_numbers" }
 ndarray = "0.15.6"
 ndarray-linalg = { version = "0.16", features = ["openblas"] }
-matrices = { path = "../matrices" }
+rand = "0.8.5"

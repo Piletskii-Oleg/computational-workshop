@@ -2,8 +2,8 @@ use ndarray::{ArrayView1, ArrayView2};
 use ndarray_linalg::{Norm, Solve};
 use prettytable::{row, Cell, Row, Table};
 
-use condition_numbers::Examples;
 use condition_numbers::{add_number, ConditionNumbers};
+use matrices::Examples;
 
 const VARIATIONS: [f64; 8] = [10.0, 1.0, 0.1, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10];
 const NEGATIVE_VARIATIONS: [f64; 8] = [-10.0, -1.0, -0.1, -1e-2, -1e-4, -1e-6, -1e-8, -1e-10];
@@ -135,14 +135,12 @@ fn variate_matrix_solve(matrix: ArrayView2<f64>, vector: ArrayView1<f64>, var: f
     let x = matrix.solve(&vector).unwrap();
     let var_matrix = add_number(matrix, var);
     let x_var = var_matrix.solve(&vector).unwrap();
-    let variance = (x - x_var).norm_l1();
-    variance
+    (x - x_var).norm_l1()
 }
 
 fn variate_vector_solve(matrix: ArrayView2<f64>, vector: ArrayView1<f64>, var: f64) -> f64 {
     let x = matrix.solve(&vector).unwrap();
     let var_vector = add_number(vector, var);
     let x_var = matrix.solve(&var_vector).unwrap();
-    let variance = (x - x_var).norm_l1();
-    variance
+    (x - x_var).norm_l1()
 }

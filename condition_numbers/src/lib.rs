@@ -1,10 +1,8 @@
 use ndarray::{Array, ArrayView, Dimension};
 
 pub use condition::*;
-pub use examples::*;
 
 mod condition;
-mod examples;
 
 pub fn euclidean_norm<D: Dimension>(matrix: ArrayView<f64, D>) -> f64 {
     matrix.iter().map(|&a| a * a).sum::<f64>().sqrt()

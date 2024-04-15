@@ -36,7 +36,7 @@ impl Examples {
     pub fn diagonal(n: usize) -> Array2<f64> {
         Self::generate_matrix(n, |row, column| {
             if row == column {
-                60.43 * (row + 1) as f64 * random::<f64>() * 40.0
+                (row + 1) as f64 * random::<f64>() * 2.0
             } else {
                 0.0
             }

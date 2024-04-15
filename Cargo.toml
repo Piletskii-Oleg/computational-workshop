@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "condition_numbers",
+    "matrices",
     "matrix_solver"
 ]
 resolver = "2"
