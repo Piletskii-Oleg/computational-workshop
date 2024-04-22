@@ -387,6 +387,7 @@ dependencies = [
  "matrices",
  "ndarray",
  "ndarray-linalg",
+ "prettytable-rs",
 ]
 
 [[package]]

@@ -10,3 +10,4 @@ condition_numbers = { path = "../condition_numbers" }
 ndarray = { version = "0.15.6", features = ["approx"] }
 ndarray-linalg = { version = "0.16", features = ["openblas"] }
 matrices = { path = "../matrices" }
+prettytable-rs = "0.10"

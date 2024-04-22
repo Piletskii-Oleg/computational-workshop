@@ -1,6 +1,6 @@
 use ndarray::{ArrayView1, ArrayView2};
 use ndarray_linalg::{Norm, Solve};
-use prettytable::{row, Cell, Row, Table};
+use prettytable::{Cell, Row, Table};
 
 use condition_numbers::{add_number, ConditionNumbers};
 use matrices::Examples;
@@ -61,9 +61,7 @@ fn examine(matrix: ArrayView2<f64>, vector: ArrayView1<f64>, text: &str) {
     println!("Solution: {x:.2}");
     let numbers = ConditionNumbers::new(matrix.view()).unwrap();
 
-    let mut table = Table::new();
-    table.add_row(row!["spectre", "volume", "angle"]);
-    table.add_row(numbers.into());
+    let table = numbers.condition_table();
     table.printstd();
 
     let mut table = Table::new();

@@ -85,9 +85,7 @@ pub fn r_vector(matrix: ArrayView2<f64>, vector: ArrayView1<f64>) -> Array1<f64>
 pub fn solve_qr(matrix: ArrayView2<f64>, vector: ArrayView1<f64>) -> Option<Array1<f64>> {
     let r = r_matrix(matrix);
     let y = r_vector(matrix, vector);
-
-    println!("r: {r:.3?}\ny: {y:.3?}");
-    Some(r.solve((&y).into()).unwrap())
+    Some(r.solve(&y).unwrap())
 }
 
 #[cfg(test)]

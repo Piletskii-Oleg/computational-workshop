@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 
 use ndarray::{ArrayView2, Axis};
 use ndarray_linalg::{Determinant, Inverse, Norm};
-use prettytable::{row, Row};
+use prettytable::{row, Row, Table};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct ConditionNumbers {
@@ -22,6 +22,13 @@ impl ConditionNumbers {
             volume,
             angle,
         })
+    }
+
+    pub fn condition_table(&self) -> Table {
+        let mut table = Table::new();
+        table.add_row(row!["spectre", "volume", "angle"]);
+        table.add_row((*self).into());
+        table
     }
 }
 
