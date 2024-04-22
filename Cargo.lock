@@ -383,6 +383,7 @@ dependencies = [
 name = "matrix_solver"
 version = "0.1.0"
 dependencies = [
+ "assert_approx_eq",
  "condition_numbers",
  "matrices",
  "ndarray",
