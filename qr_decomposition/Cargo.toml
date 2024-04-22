@@ -1,5 +1,5 @@
 [package]
-name = "matrix_solver"
+name = "qr_decomposition"
 version = "0.1.0"
 edition = "2021"
 

@@ -1,7 +1,8 @@
 [workspace]
 members = [
     "condition_numbers",
+    "iterative_methods",
     "matrices",
-    "matrix_solver"
+    "qr_decomposition"
 ]
 resolver = "2"

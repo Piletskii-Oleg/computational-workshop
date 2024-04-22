@@ -3,7 +3,7 @@ use ndarray_linalg::Solve;
 
 use condition_numbers::ConditionNumbers;
 use matrices::Examples;
-use matrix_solver::{q_matrix, r_matrix, solve_qr};
+use qr_decomposition::{q_matrix, r_matrix, solve_qr};
 
 fn main() {
     let matrix = array![[2.0, 2.0, -1.0], [3.0, 4.0, 2.0], [5.0, 6.4, 1.1]];

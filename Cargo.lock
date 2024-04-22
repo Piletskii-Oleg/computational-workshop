@@ -297,6 +297,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "iterative_methods"
+version = "0.1.0"
+dependencies = [
+ "condition_numbers",
+ "matrices",
+ "ndarray",
+ "ndarray-linalg",
+ "prettytable-rs",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -377,17 +388,6 @@ dependencies = [
  "ndarray",
  "ndarray-linalg",
  "rand",
-]
-
-[[package]]
-name = "matrix_solver"
-version = "0.1.0"
-dependencies = [
- "condition_numbers",
- "matrices",
- "ndarray",
- "ndarray-linalg",
- "prettytable-rs",
 ]
 
 [[package]]
@@ -609,6 +609,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e835ff2298f5721608eb1a980ecaee1aef2c132bf95ecc026a11b7bf3c01c02e"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "qr_decomposition"
+version = "0.1.0"
+dependencies = [
+ "condition_numbers",
+ "matrices",
+ "ndarray",
+ "ndarray-linalg",
+ "prettytable-rs",
 ]
 
 [[package]]
