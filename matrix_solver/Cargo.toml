@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 condition_numbers = { path = "../condition_numbers" }
-ndarray = "0.15.6"
+ndarray = { version = "0.15.6", features = ["approx"] }
 ndarray-linalg = { version = "0.16", features = ["openblas"] }
 matrices = { path = "../matrices" }
-assert_approx_eq = "1.1.0"

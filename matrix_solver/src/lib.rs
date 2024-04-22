@@ -47,7 +47,7 @@ pub fn q_matrix(matrix: ArrayView2<f64>) -> Array2<f64> {
         (i + 1..n).fold(acc, |acc2, j| {
             let rotation_matrix = rotation_matrix((i, j), matrix.column(i));
             let transposed = rotation_matrix.t();
-            transposed.dot(&acc2)
+            acc2.dot(&transposed)
         })
     })
 }
@@ -88,4 +88,35 @@ pub fn solve_qr(matrix: ArrayView2<f64>, vector: ArrayView1<f64>) -> Option<Arra
 
     println!("r: {r:.3?}\ny: {y:.3?}");
     Some(r.solve((&y).into()).unwrap())
+}
+
+#[cfg(test)]
+mod tests {
+    use ndarray_linalg::Solve;
+
+    use matrices::Examples;
+
+    use crate::{q_matrix, r_matrix, solve_qr};
+
+    #[test]
+    fn qr_multiplied_is_original_matrix() {
+        let matrix = Examples::random_matrix(10);
+        let r_matrix = r_matrix(matrix.view());
+        let q_matrix = q_matrix(matrix.view());
+
+        let qr = q_matrix.dot(&r_matrix);
+        println!("{matrix}\n{qr}");
+        assert!(matrix.abs_diff_eq(&qr, 1e-10));
+    }
+
+    #[test]
+    fn qr_decomposition_solution_is_correct() {
+        let matrix = Examples::random_matrix(10);
+        let vector = Examples::random_vector(10);
+
+        let x_qr = solve_qr(matrix.view(), vector.view()).unwrap();
+        let x_normal = matrix.solve(&vector).unwrap();
+
+        assert!(x_normal.abs_diff_eq(&x_qr, 1e-10))
+    }
 }
