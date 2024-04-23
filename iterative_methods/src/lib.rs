@@ -22,7 +22,7 @@ pub fn iterate(matrix: ArrayView2<f64>, vector: ArrayView1<f64>, epsilon: f64) -
 
     let (b, c) = iterative_matrices(matrix, vector);
 
-    let mut prev: Array1<f64> = Array1::zeros(n.f());
+    let mut prev = Array1::zeros(n.f());
     let mut this = b.dot(&prev) + &c;
 
     let mut iteration_count = 0;

@@ -1,30 +1,41 @@
-use ndarray::array;
+use ndarray::{array, Array1, Array2};
 use ndarray_linalg::Solve;
 
 use iterative_methods::seidel;
 use matrices::Examples;
 
+const EPSILONS: [f64; 5] = [1e-5, 1e-6, 1e-7, 1e-8, 1e-9];
+
 fn main() {
     let mut matrix = array![[3, 4, 1], [5, 5, 1], [6, 6, 9]].mapv(|value| value as f64);
-
-    for i in 0..matrix.nrows() {
-        matrix[(i, i)] += 40.0;
-    }
-
+    add_to_diagonal(&mut matrix, 40.0);
     let vector = Examples::random_vector(3);
 
-    let x = iterative_methods::iterate(matrix.view(), vector.view(), 10e-9);
-    let x_correct = matrix.solve(&vector).unwrap();
-    println!(
-        "Iterative: {} in {} steps\nCorrect: {x_correct}",
-        x.x(),
-        x.iteration_count()
-    );
+    // more examples
+    // symmetric matrices 200x200
 
-    let x_seidel = seidel(matrix.view(), vector.view(), 10e-9);
-    println!(
-        "Seidel: {} in {} steps",
-        x_seidel.x(),
-        x_seidel.iteration_count()
-    );
+    examine(&matrix, &vector, "3x3 Matrix", &EPSILONS);
+}
+
+fn add_to_diagonal(matrix: &mut Array2<f64>, num: f64) {
+    for i in 0..matrix.nrows() {
+        matrix[(i, i)] += num;
+    }
+}
+
+fn examine(matrix: &Array2<f64>, vector: &Array1<f64>, message: &str, epsilons: &[f64]) {
+    println!("{message}");
+
+    let x_correct = matrix.solve(&vector).unwrap();
+    println!("Correct: {x_correct:.3}");
+
+    for epsilon in epsilons {
+        println!("Epsilon: {epsilon:e}");
+
+        let x = iterative_methods::iterate(matrix.view(), vector.view(), *epsilon);
+        println!("Iterative: {:.3} in {} steps", x.x(), x.iteration_count());
+
+        let x = seidel(matrix.view(), vector.view(), *epsilon);
+        println!("Seidel: {:.3} in {} steps", x.x(), x.iteration_count());
+    }
 }
