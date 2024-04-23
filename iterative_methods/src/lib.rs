@@ -39,6 +39,40 @@ pub fn iterate(matrix: ArrayView2<f64>, vector: ArrayView1<f64>, epsilon: f64) -
     }
 }
 
+pub fn seidel(matrix: ArrayView2<f64>, vector: ArrayView1<f64>, epsilon: f64) -> IterationResult {
+    let n = matrix.nrows();
+
+    let mut prev = Array1::from_vec(vec![0.0; n]);
+    let mut next = Array1::from_vec(vec![1.0; n]);
+
+    let mut iteration_count = 0;
+
+    while (&prev - &next).norm() > epsilon {
+        let buf = (0..n)
+            .map(|i| {
+                let first = (0..i).fold(0.0, |acc, j| {
+                    acc + matrix[(i, j)] * next[j] / matrix[(i, i)]
+                });
+                let second = (i + 1..n).fold(0.0, |acc, j| {
+                    acc + matrix[(i, j)] * prev[j] / matrix[(i, i)]
+                });
+                let third = vector[i] / matrix[(i, i)];
+                -first - second + third
+            })
+            .collect();
+
+        prev = next;
+        next = buf;
+
+        iteration_count += 1;
+    }
+
+    IterationResult {
+        x: next,
+        iteration_count,
+    }
+}
+
 fn iterative_matrices(
     matrix: ArrayView2<f64>,
     vector: ArrayView1<f64>,

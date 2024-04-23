@@ -1,6 +1,7 @@
 use ndarray::array;
 use ndarray_linalg::Solve;
 
+use iterative_methods::seidel;
 use matrices::Examples;
 
 fn main() {
@@ -15,8 +16,15 @@ fn main() {
     let x = iterative_methods::iterate(matrix.view(), vector.view(), 10e-9);
     let x_correct = matrix.solve(&vector).unwrap();
     println!(
-        "{} in {} steps\ncorrect: {x_correct}",
+        "Iterative: {} in {} steps\nCorrect: {x_correct}",
         x.x(),
         x.iteration_count()
+    );
+
+    let x_seidel = seidel(matrix.view(), vector.view(), 10e-9);
+    println!(
+        "Seidel: {} in {} steps",
+        x_seidel.x(),
+        x_seidel.iteration_count()
     );
 }
