@@ -103,7 +103,6 @@ mod tests {
         let q_matrix = q_matrix(matrix.view());
 
         let qr = q_matrix.dot(&r_matrix);
-        println!("{matrix}\n{qr}");
         assert!(matrix.abs_diff_eq(&qr, 1e-10));
     }
 
