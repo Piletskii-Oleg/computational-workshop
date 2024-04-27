@@ -194,21 +194,21 @@ dependencies = [
 name = "eigenvalues_partial_problem"
 version = "0.1.0"
 dependencies = [
-    "condition_numbers",
-    "matrices",
-    "ndarray",
-    "ndarray-linalg",
-    "prettytable-rs",
+ "condition_numbers",
+ "matrices",
+ "ndarray",
+ "ndarray-linalg",
+ "prettytable-rs",
 ]
 
 [[package]]
 name = "eigenvalues_problem"
 version = "0.1.0"
 dependencies = [
-    "matrices",
-    "ndarray",
-    "ndarray-linalg",
-    "prettytable-rs",
+ "matrices",
+ "ndarray",
+ "ndarray-linalg",
+ "prettytable-rs",
 ]
 
 [[package]]
