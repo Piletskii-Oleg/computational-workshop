@@ -202,6 +202,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigenvalues_problem"
+version = "0.1.0"
+dependencies = [
+    "matrices",
+    "ndarray",
+    "ndarray-linalg",
+    "prettytable-rs",
+]
+
+[[package]]
 name = "encode_unicode"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

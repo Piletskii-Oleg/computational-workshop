@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "condition_numbers",
-    "eigenvalues_partial_problem",
+    "eigenvalues_partial_problem", "eigenvalues_problem",
     "iterative_methods",
     "matrices",
     "qr_decomposition"
