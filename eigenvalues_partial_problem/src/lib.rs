@@ -3,10 +3,10 @@ use ndarray_linalg::Norm;
 
 #[derive(Debug)]
 pub struct EigenvalueResult {
-    eigenvalue: f64,
-    eigenvector: Array1<f64>,
-    error: f64,
-    steps: u32,
+    pub eigenvalue: f64,
+    pub eigenvector: Array1<f64>,
+    pub error: f64,
+    pub steps: u32,
 }
 
 pub fn power_iteration(
