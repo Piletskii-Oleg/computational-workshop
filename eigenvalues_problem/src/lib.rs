@@ -1,9 +1,11 @@
 use ndarray::{Array2, ArrayView2};
 
 pub use choose_max::*;
+pub use gershgorin::*;
 use matrices::rotation_matrix_default;
 
 mod choose_max;
+mod gershgorin;
 
 #[derive(Debug)]
 pub struct JacobiResult {
@@ -48,7 +50,6 @@ pub fn jacobi_method<C: ChooseMax>(
         //finder.update(max, matrix.view());
     }
 
-    println!("{matrix:.2?}");
     let eigenvalues = (0..n).map(|i| matrix[(i, i)]).collect();
     JacobiResult { eigenvalues, steps }
 }
