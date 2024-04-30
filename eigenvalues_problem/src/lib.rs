@@ -1,4 +1,7 @@
+use std::fmt::{Display, Formatter};
+
 use ndarray::{Array2, ArrayView2};
+use ndarray_linalg::Inverse;
 
 pub use choose_max::*;
 pub use gershgorin::*;
@@ -17,15 +20,18 @@ fn rotation_matrix((i, j): (usize, usize), matrix: ArrayView2<f64>) -> Array2<f6
     let x = -2.0 * matrix[(i, j)];
     let y = matrix[(i, i)] - matrix[(j, j)];
 
-    let (cos, sin) = if y < f64::EPSILON {
-        let value = 1.0 / 2.0_f64.sqrt();
-        (value, value)
-    } else {
-        let distance = (x * x + y * y).sqrt();
-        let cos = ((1.0 + y.abs() / distance) / 2.0).sqrt();
-        let sin = x.abs() * (x * y).signum() / (2.0 * cos * distance);
-        (cos, sin)
-    };
+    let angle = (x / y).atan() / 2.0;
+    let cos = angle.cos();
+    let sin = angle.sin();
+    // let (cos, sin) = if y < f64::EPSILON {
+    //     let value = 1.0 / 2.0_f64.sqrt();
+    //     (value, value)
+    // } else {
+    //     let distance = (x * x + y * y).sqrt();
+    //     let cos = ((1.0 + y.abs() / distance) / 2.0).sqrt();
+    //     let sin = x.abs() * (x * y).signum() / (2.0 * cos * distance);
+    //     (cos, sin)
+    // };
 
     let n = matrix.nrows();
     rotation_matrix_default(n, (cos, sin), (i, j))
@@ -40,14 +46,16 @@ pub fn jacobi_method<C: ChooseMax>(
 
     let mut steps = 0;
     let mut matrix = matrix.to_owned();
-    while !is_diagonal(matrix.view(), epsilon) {
+    while !is_diagonal_new(matrix.view(), epsilon) {
         let max = finder.choose(matrix.view());
 
         let rotation_matrix = rotation_matrix(max, matrix.view());
-        matrix = rotation_matrix.t().dot(&matrix).dot(&rotation_matrix);
+        let rotation_matrix_inv = rotation_matrix.inv().unwrap();
+        matrix = rotation_matrix.dot(&matrix).dot(&rotation_matrix_inv);
 
         steps += 1;
-        //finder.update(max, matrix.view());
+        //println!("{matrix:.2}");
+        // finder.update(max, matrix.view());
     }
 
     let eigenvalues = (0..n).map(|i| matrix[(i, i)]).collect();
@@ -69,4 +77,21 @@ fn is_diagonal(matrix: ArrayView2<f64>, epsilon: f64) -> bool {
     }
 
     true
+}
+
+fn is_diagonal_new(matrix: ArrayView2<f64>, epsilon: f64) -> bool {
+    let sums = matrix
+        .rows()
+        .into_iter()
+        .enumerate()
+        .map(|(i, row)| row.map(|x| x.abs()).sum() - row[i].abs())
+        .collect::<Vec<_>>();
+    //println!("R_i: {sum:?}");
+    sums.iter().all(|sum| *sum < epsilon)
+}
+
+impl Display for JacobiResult {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:.2?} in {} steps", self.eigenvalues, self.steps)
+    }
 }

@@ -10,11 +10,15 @@ fn main() {
     let mut matrix = array![[3, 4, 1], [5, 5, 1], [6, 6, 9]].mapv(|value| value as f64);
     add_to_diagonal(&mut matrix, 40.0);
     let vector = Examples::random_vector(3);
-
-    // more examples
-    // symmetric matrices 200x200
-
     examine(&matrix, &vector, "3x3 Matrix", &EPSILONS);
+
+    let symmetric = Examples::sparse_diagonal_dominance(200);
+    let vector = Examples::random_vector(200);
+    examine(&symmetric, &vector, "Symmetric 200x200", &EPSILONS);
+
+    let symmetric = Examples::sparse_diagonal_dominance(230);
+    let vector = Examples::random_vector(230);
+    examine(&symmetric, &vector, "Symmetric 230x230", &EPSILONS);
 }
 
 fn add_to_diagonal(matrix: &mut Array2<f64>, num: f64) {

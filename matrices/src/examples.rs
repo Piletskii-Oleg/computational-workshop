@@ -52,4 +52,33 @@ impl Examples {
     pub fn random_vector(n: usize) -> Array1<f64> {
         (0..n).map(|_| random::<f64>() * 70.0).collect()
     }
+
+    pub fn sparse_diagonal_dominance(n: usize) -> Array2<f64> {
+        let mut matrix = generate_matrix(n, |row, column| random::<f64>());
+
+        for i in 0..n {
+            for j in i..n {
+                matrix[(i, j)] = matrix[(j, i)];
+            }
+        }
+
+        for i in 0..n {
+            for j in 0..n {
+                if i == j {
+                    continue;
+                }
+
+                if random::<f64>() < 0.7 {
+                    matrix[(i, j)] = 0.0;
+                    matrix[(j, i)] = 0.0;
+                }
+            }
+        }
+
+        for i in 0..n {
+            matrix[(i, i)] += 10.0;
+        }
+
+        matrix
+    }
 }

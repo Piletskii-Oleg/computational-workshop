@@ -1,4 +1,4 @@
-use ndarray::{Array1, Array2};
+use ndarray::{array, Array1, Array2};
 use ndarray_linalg::EigVals;
 
 use eigenvalues_partial_problem::{dot_product_method, power_iteration};
@@ -14,6 +14,14 @@ fn main() {
     let hilbert_matrix = Examples::hilbert(9);
     let random_vector = Examples::random_vector(9);
     examine(hilbert_matrix, random_vector, "-- Hilbert matrix --");
+
+    let matrix = array![
+        [-0.81417, -0.01937, 0.41372],
+        [-0.01937, 0.54414, 0.00590],
+        [0.41732, 0.00590, -0.81445]
+    ];
+    let vector = array![1.0, 1.0, 1.0];
+    examine(matrix, vector, "-- Good matrix --");
 }
 
 fn examine(matrix: Array2<f64>, vector: Array1<f64>, message: &str) {
@@ -31,7 +39,7 @@ fn examine(matrix: Array2<f64>, vector: Array1<f64>, message: &str) {
         println!("Dot product.");
         let lambda_dot = dot_product_method(matrix.view(), vector.view(), epsilon);
         println!(
-            "found eigenvalue {:.6} with error {:.8}\nvector: {:?}\nsteps: {}",
+            "found eigenvalue {:.6} with error {:.10}\nvector: {:?}\nsteps: {}",
             lambda_dot.eigenvalue, lambda_dot.error, lambda_dot.eigenvector, lambda_dot.steps
         );
         println!("--------------------------------")
