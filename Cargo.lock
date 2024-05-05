@@ -970,6 +970,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "projection_methods"
+version = "0.1.0"
+
+[[package]]
 name = "qr_decomposition"
 version = "0.1.0"
 dependencies = [

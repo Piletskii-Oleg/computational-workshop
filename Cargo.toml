@@ -6,6 +6,7 @@ members = [
     "grid_method",
     "iterative_methods",
     "matrices",
+    "projection_methods",
     "qr_decomposition"
 ]
 resolver = "2"
