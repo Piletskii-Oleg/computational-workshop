@@ -62,23 +62,6 @@ pub fn jacobi_method<C: ChooseMax>(
     JacobiResult { eigenvalues, steps }
 }
 
-fn is_diagonal(matrix: ArrayView2<f64>, epsilon: f64) -> bool {
-    let n = matrix.nrows();
-    for i in 0..n {
-        for j in 0..n {
-            if i == j {
-                continue;
-            }
-
-            if matrix[(i, j)].abs() > epsilon {
-                return false;
-            }
-        }
-    }
-
-    true
-}
-
 fn is_diagonal_new(matrix: ArrayView2<f64>, epsilon: f64) -> bool {
     let sums = matrix
         .rows()

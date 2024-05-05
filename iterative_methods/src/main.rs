@@ -30,7 +30,7 @@ fn add_to_diagonal(matrix: &mut Array2<f64>, num: f64) {
 fn examine(matrix: &Array2<f64>, vector: &Array1<f64>, message: &str, epsilons: &[f64]) {
     println!("{message}");
 
-    let x_correct = matrix.solve(&vector).unwrap();
+    let x_correct = matrix.solve(vector).unwrap();
     println!("Correct: {x_correct:.3}");
 
     for epsilon in epsilons {

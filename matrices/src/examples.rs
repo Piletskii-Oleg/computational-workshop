@@ -54,7 +54,7 @@ impl Examples {
     }
 
     pub fn sparse_diagonal_dominance(n: usize) -> Array2<f64> {
-        let mut matrix = generate_matrix(n, |row, column| random::<f64>());
+        let mut matrix = generate_matrix(n, |_row, _column| random::<f64>());
 
         for i in 0..n {
             for j in i..n {

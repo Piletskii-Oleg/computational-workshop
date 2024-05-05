@@ -24,19 +24,19 @@ fn main() {
     let err_root_area = SVGBackend::new("task_7.svg", (600, 400)).into_drawing_area();
     err_root_area.fill(&WHITE).unwrap();
 
-    let min_error = solution
+    let _min_error = solution
         .errors
         .iter()
-        .min_by(|a, b| a.total_cmp(&b))
+        .min_by(|a, b| a.total_cmp(b))
         .unwrap();
     let max_error = solution
         .errors
         .iter()
-        .max_by(|a, b| a.total_cmp(&b))
+        .max_by(|a, b| a.total_cmp(b))
         .unwrap();
 
     let min_size = solution.grid_sizes.iter().min().unwrap();
-    let max_size = solution.grid_sizes.iter().max().unwrap().clone();
+    let max_size = *solution.grid_sizes.iter().max().unwrap();
 
     let mut error_ctx = ChartBuilder::on(&err_root_area)
         .set_label_area_size(LabelAreaPosition::Left, 40)

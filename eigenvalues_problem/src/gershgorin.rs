@@ -18,8 +18,8 @@ impl Circles {
 
         let circles = centers
             .into_iter()
-            .zip(radii.into_iter())
-            .map(|(center, radius)| Circle { center, radius })
+            .zip(radii.iter())
+            .map(|(center, &radius)| Circle { center, radius })
             .collect();
         Self(circles)
     }

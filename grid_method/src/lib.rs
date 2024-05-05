@@ -33,12 +33,12 @@ pub fn solve_grid(equation: Equation, mut n: usize, epsilon: f64) -> Solution {
     let mut errors = Vec::new();
     let mut grid_sizes = vec![n];
 
-    let (A, b) = generate_matrix(&equation, n);
-    let mut prev = A.solve(&b).unwrap();
+    let (matrix, vector) = generate_matrix(&equation, n);
+    let mut prev = matrix.solve(&vector).unwrap();
 
     n *= 2;
-    let (A, b) = generate_matrix(&equation, n);
-    let mut next = A.solve(&b).unwrap();
+    let (matrix, vector) = generate_matrix(&equation, n);
+    let mut next = matrix.solve(&vector).unwrap();
     grid_sizes.push(n);
 
     let delta = delta(&prev, &next);
@@ -49,8 +49,8 @@ pub fn solve_grid(equation: Equation, mut n: usize, epsilon: f64) -> Solution {
         prev = next;
         n *= 2;
 
-        let (A, b) = generate_matrix(&equation, n);
-        next = A.solve(&b).unwrap();
+        let (matrix, vector) = generate_matrix(&equation, n);
+        next = matrix.solve(&vector).unwrap();
 
         let delta = crate::delta(&prev, &next);
         next += &delta;

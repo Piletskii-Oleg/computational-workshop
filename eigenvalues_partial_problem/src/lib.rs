@@ -49,7 +49,7 @@ pub fn dot_product_method(
     let mut x_prev = vector.to_owned();
     let mut x_next = matrix.dot(&x_prev);
 
-    let mut y_prev = vector.to_owned();
+    let y_prev = vector.to_owned();
     let mut y_next = matrix_t.dot(&y_prev);
 
     let mut eigenvalue = (x_next.dot(&y_next)) / (x_prev.dot(&y_next));
@@ -62,7 +62,6 @@ pub fn dot_product_method(
         x_next = x_buf;
 
         let y_buf = matrix_t.dot(&y_next);
-        y_prev = y_next;
         y_next = y_buf;
 
         eigenvalue = (x_next.dot(&y_next)) / (x_prev.dot(&y_next));
