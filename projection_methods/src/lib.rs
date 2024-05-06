@@ -54,6 +54,43 @@ pub fn solve_ritz(
     }
 }
 
+pub fn solve_galerkin(
+    equation: &Equation,
+    orthogonal_system: Vec<OrthogonalFunction>,
+) -> impl Fn(f64) -> f64 {
+    let n = orthogonal_system.len();
+    let matrix = generate_matrix(n, |i, j| {
+        let integral = |x: f64| {
+            (orthogonal_system[i].function)(x)
+                * (-(equation.p)(x) * (orthogonal_system[j].second_prime)(x)
+                    + (equation.q)(x) * (orthogonal_system[j].prime)(x)
+                    + (equation.r)(x) * (orthogonal_system[j].function)(x))
+        };
+        peroxide::numerical::integral::integrate(integral, (-1.0, 1.0), Integral::GaussLegendre(30))
+    });
+
+    let vector = (0..n)
+        .map(|index| {
+            let integral = |x: f64| (equation.f)(x) * (orthogonal_system[index].function)(x);
+            peroxide::numerical::integral::integrate(
+                integral,
+                (-1.0, 1.0),
+                Integral::GaussLegendre(30),
+            )
+        })
+        .collect::<Array1<f64>>();
+
+    let coefficients = matrix.solve(&vector).unwrap();
+
+    move |x: f64| {
+        coefficients
+            .iter()
+            .enumerate()
+            .map(|(i, &c)| c * (orthogonal_system[i].function)(x))
+            .sum()
+    }
+}
+
 pub fn solve_collocation(
     equation: &Equation,
     roots: Vec<f64>,
@@ -61,14 +98,12 @@ pub fn solve_collocation(
 ) -> impl Fn(f64) -> f64 {
     let n = orthogonal_system.len();
     let matrix = generate_matrix(n, |i, j| {
-        let root = roots[i];
+        let x = roots[i];
+        let fun = &orthogonal_system[j];
 
-        let prime = orthogonal_system[j].prime.clone();
-        let p = equation.p.clone();
-
-        let derivative = reikna::derivative::derivative(&func!(move |x: f64| p(x) * prime(x)));
-
-        -derivative(root) + (equation.r)(root) * (orthogonal_system[j].function)(root)
+        -(equation.p)(x) * (fun.second_prime)(x)
+            + (equation.q)(x) * (fun.prime)(x)
+            + (equation.r)(x) * (fun.function)(x)
     });
     let vector = roots
         .iter()

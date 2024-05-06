@@ -7,7 +7,9 @@ use plotters::prelude::*;
 use plotters::style::full_palette::BROWN;
 
 use grid_method::Equation;
-use projection_methods::{jacobi_function, solve_collocation, solve_ritz, OrthogonalFunction};
+use projection_methods::{
+    jacobi_function, solve_collocation, solve_galerkin, solve_ritz, OrthogonalFunction,
+};
 
 fn main() {
     pyo3::prepare_freethreaded_python();
@@ -15,7 +17,7 @@ fn main() {
     // Вариант 2
     let equation = Equation {
         p: |x: f64| (2.0 + x) / (3.0 + x),
-        q: |x: f64| 1.0 / (3.0 + x).square(),
+        q: |x: f64| -1.0 / ((3.0 + x).square()),
         r: |x: f64| 1.0 + x.sin(),
         f: |x: f64| 1.0 - x,
         a: 0.0,
@@ -28,8 +30,46 @@ fn main() {
         beta: 0.0,
     };
 
-    draw_ritz(&equation);
+    //draw_ritz(&equation);
     draw_collocation(&equation);
+    draw_galerkin(&equation);
+}
+
+fn draw_galerkin(equation: &Equation) {
+    let function_root_area = SVGBackend::new("task_8_galerkin.svg", (600, 400)).into_drawing_area();
+    function_root_area.fill(&WHITE).unwrap();
+
+    let mut galerkin_ctx = ChartBuilder::on(&function_root_area)
+        .set_label_area_size(LabelAreaPosition::Left, 40)
+        .set_label_area_size(LabelAreaPosition::Bottom, 40)
+        .caption("Ritz Method", ("sans-serif", 40))
+        .build_cartesian_2d(-1.0..1.0, 0.0..2.0)
+        .unwrap();
+    galerkin_ctx.configure_mesh().draw().unwrap();
+
+    for (n, color) in [2, 4, 8, 16, 32, 64]
+        .into_iter()
+        .zip([GREY, GREEN, RED, BROWN, BLUE, BLACK])
+    {
+        let galerkin = solve_galerkin(&equation, orthogonal_system(n));
+        galerkin_ctx
+            .draw_series(LineSeries::new(
+                (-10000..=10000)
+                    .map(|x| x as f64 * 0.0001)
+                    .map(|x| (x, galerkin(x))),
+                &color,
+            ))
+            .unwrap()
+            .label(&format!("{n}"))
+            .legend(move |(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], color));
+    }
+
+    galerkin_ctx
+        .configure_series_labels()
+        .border_style(&BLACK)
+        .background_style(&WHITE.mix(0.8))
+        .draw()
+        .unwrap();
 }
 
 fn draw_ritz(equation: &Equation) {
@@ -82,10 +122,7 @@ fn draw_collocation(equation: &Equation) {
         .unwrap();
     collocation_ctx.configure_mesh().draw().unwrap();
 
-    for (n, color) in [2, 4, 8, 16, 32, 64]
-        .into_iter()
-        .zip([GREY, GREEN, RED, BROWN, BLUE, BLACK])
-    {
+    for (n, color) in [64].into_iter().zip([BLACK]) {
         let collocation = solve_collocation(equation, roots(n), orthogonal_system(n));
         collocation_ctx
             .draw_series(LineSeries::new(
