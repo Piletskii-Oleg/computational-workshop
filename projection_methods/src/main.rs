@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    pyo3::prepare_freethreaded_python();
 }

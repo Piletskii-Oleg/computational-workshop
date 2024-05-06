@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+ndarray = "0.15.6"
+ndarray-linalg = { version = "0.16", features = ["openblas"] }
+pyo3 = { version = "0.21", features = ["auto-initialize"] }
+grid_method = { path = "../grid_method" }
+matrices = { path = "../matrices" }
+peroxide = "0.37"
+reikna = "0.12"
