@@ -11,20 +11,25 @@ use reikna::func::Function;
 use grid_method::Equation;
 use matrices::generate_matrix;
 
-#[derive(Copy, Clone)]
 pub struct OrthogonalFunction {
-    pub function: fn(f64) -> f64,
-    pub prime: fn(f64) -> f64,
-    pub second_prime: fn(f64) -> f64,
+    pub function: Rc<dyn Fn(f64) -> f64>,
+    pub prime: Rc<dyn Fn(f64) -> f64>,
+    pub second_prime: Box<dyn Fn(f64) -> f64>,
 }
 
 pub fn solve_ritz(
-    equation: Equation,
+    equation: &Equation,
     orthogonal_system: Vec<OrthogonalFunction>,
 ) -> impl Fn(f64) -> f64 {
     let n = orthogonal_system.len();
     let matrix = generate_matrix(n, |i, j| {
-        bilinear_form(&equation, (orthogonal_system[i], orthogonal_system[j]))
+        bilinear_form(
+            &equation,
+            (
+                orthogonal_system[i].function.clone(),
+                orthogonal_system[j].function.clone(),
+            ),
+        )
     });
 
     let vector = (0..n)
@@ -33,7 +38,7 @@ pub fn solve_ritz(
             peroxide::numerical::integral::integrate(
                 integral,
                 (-1.0, 1.0),
-                Integral::NewtonCotes(10000),
+                Integral::GaussLegendre(30),
             )
         })
         .collect::<Array1<f64>>();
@@ -50,16 +55,20 @@ pub fn solve_ritz(
 }
 
 pub fn solve_collocation(
-    equation: Equation,
+    equation: &Equation,
     roots: Vec<f64>,
     orthogonal_system: Vec<OrthogonalFunction>,
 ) -> impl Fn(f64) -> f64 {
     let n = orthogonal_system.len();
     let matrix = generate_matrix(n, |i, j| {
-        let x = roots[i];
-        (equation.p)(x) * (orthogonal_system[j].second_prime)(x)
-            + (equation.q)(x) * (orthogonal_system[j].prime)(x)
-            + (equation.r)(x) * (orthogonal_system[j].function)(x)
+        let root = roots[i];
+
+        let prime = orthogonal_system[j].prime.clone();
+        let p = equation.p.clone();
+
+        let derivative = reikna::derivative::derivative(&func!(move |x: f64| p(x) * prime(x)));
+
+        -derivative(root) + (equation.r)(root) * (orthogonal_system[j].function)(root)
     });
     let vector = roots
         .iter()
@@ -77,33 +86,31 @@ pub fn solve_collocation(
     }
 }
 
-fn bilinear_form(equation: &Equation, (y, z): (OrthogonalFunction, OrthogonalFunction)) -> f64 {
+fn bilinear_form(
+    equation: &Equation,
+    (y, z): (Rc<dyn Fn(f64) -> f64>, Rc<dyn Fn(f64) -> f64>),
+) -> f64 {
     let q_l = if equation.alpha1 < f64::EPSILON || equation.alpha2 < f64::EPSILON {
         0.0
     } else {
-        equation.alpha1 / equation.alpha2
-            * (equation.p)(-1.0)
-            * (y.function)(-1.0)
-            * (z.function)(-1.0)
+        equation.alpha1 / equation.alpha2 * (equation.p)(-1.0) * (y)(-1.0) * (z)(-1.0)
     };
 
-    let q_r = if equation.alpha1 < f64::EPSILON || equation.alpha2 < f64::EPSILON {
+    let q_r = if equation.beta1 < f64::EPSILON || equation.beta2 < f64::EPSILON {
         0.0
     } else {
-        equation.alpha1 / equation.alpha2
-            * (equation.p)(1.0)
-            * (y.function)(1.0)
-            * (z.function)(1.0)
+        equation.beta1 / equation.beta2 * (equation.p)(1.0) * (y)(1.0) * (z)(1.0)
     };
 
-    let y_derivative = reikna::derivative::derivative(&func!(move |x| (y.function)(x)));
-    let z_derivative = reikna::derivative::derivative(&func!(move |x| (z.function)(x)));
+    let y_clone = y.clone();
+    let z_clone = z.clone();
+    let y_derivative = reikna::derivative::derivative(&func!(move |x| (y_clone)(x)));
+    let z_derivative = reikna::derivative::derivative(&func!(move |x| (z_clone)(x)));
 
     let integral = |x: f64| {
-        (equation.p)(x) * y_derivative(x) * z_derivative(x)
-            + (equation.r)(x) * (y.function)(x) * (z.function)(x)
+        (equation.p)(x) * y_derivative(x) * z_derivative(x) + (equation.r)(x) * (y)(x) * (z)(x)
     };
-    peroxide::numerical::integral::integrate(integral, (-1.0, 1.0), Integral::NewtonCotes(10000))
+    peroxide::numerical::integral::integrate(integral, (-1.0, 1.0), Integral::GaussLegendre(30))
         + q_l
         + q_r
 }

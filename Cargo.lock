@@ -1118,6 +1118,7 @@ dependencies = [
  "ndarray",
  "ndarray-linalg",
  "peroxide",
+    "plotters",
  "pyo3",
  "reikna",
 ]
