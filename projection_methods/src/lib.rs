@@ -12,7 +12,7 @@ use grid_method::Equation;
 use matrices::generate_matrix;
 
 #[derive(Copy, Clone)]
-struct OrthogonalFunction {
+pub struct OrthogonalFunction {
     pub function: fn(f64) -> f64,
     pub prime: fn(f64) -> f64,
     pub second_prime: fn(f64) -> f64,
@@ -51,9 +51,30 @@ pub fn solve_ritz(
 
 pub fn solve_collocation(
     equation: Equation,
+    roots: Vec<f64>,
     orthogonal_system: Vec<OrthogonalFunction>,
 ) -> impl Fn(f64) -> f64 {
-    |x: f64| x
+    let n = orthogonal_system.len();
+    let matrix = generate_matrix(n, |i, j| {
+        let x = roots[i];
+        (equation.p)(x) * (orthogonal_system[j].second_prime)(x)
+            + (equation.q)(x) * (orthogonal_system[j].prime)(x)
+            + (equation.r)(x) * (orthogonal_system[j].function)(x)
+    });
+    let vector = roots
+        .iter()
+        .map(|&root| (equation.f)(root))
+        .collect::<Array1<f64>>();
+
+    let coefficients = matrix.solve(&vector).unwrap();
+
+    move |x: f64| {
+        coefficients
+            .iter()
+            .enumerate()
+            .map(|(i, &c)| c * (orthogonal_system[i].function)(x))
+            .sum()
+    }
 }
 
 fn bilinear_form(equation: &Equation, (y, z): (OrthogonalFunction, OrthogonalFunction)) -> f64 {
@@ -87,7 +108,7 @@ fn bilinear_form(equation: &Equation, (y, z): (OrthogonalFunction, OrthogonalFun
         + q_r
 }
 
-fn jacobi_function(i: usize, alpha: usize, beta: usize, x: f64) -> f64 {
+pub fn jacobi_function(i: usize, alpha: usize, beta: usize, x: f64) -> f64 {
     let x = Python::with_gil(|py| -> PyResult<f64> {
         let scipy = PyModule::import_bound(py, "scipy").unwrap();
         let x = scipy
