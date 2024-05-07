@@ -1,4 +1,5 @@
 use ndarray::array;
+use ndarray_linalg::Scalar;
 
 use optimization::{
     minimize_gradient, minimize_heavy_ball, minimize_nesterov, minimize_newton, Answer, Task,
@@ -13,8 +14,17 @@ fn main() {
         alpha: 0.1,
         beta: 0.4,
     };
+    examine(task);
 
-    examine(task)
+    println!("----------------------------------");
+
+    let task = Task {
+        f: |x| x[0].cos() * x[1].sin().square(),
+        start_point: array![1.0, -1.0],
+        alpha: 0.1,
+        beta: 0.4,
+    };
+    examine(task);
 }
 
 fn examine(task: Task) {
