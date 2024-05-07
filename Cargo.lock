@@ -504,6 +504,11 @@ dependencies = [
 [[package]]
 name = "heat_equation"
 version = "0.1.0"
+dependencies = [
+    "ndarray",
+    "ndarray-linalg",
+    "plotters",
+]
 
 [[package]]
 name = "heck"
