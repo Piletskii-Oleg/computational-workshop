@@ -1,8 +1,10 @@
 use ndarray::array;
 
 use optimization::{
-    minimize_gradient, minimize_heavy_ball, minimize_nesterov, minimize_newton, Task,
+    minimize_gradient, minimize_heavy_ball, minimize_nesterov, minimize_newton, Answer, Task,
 };
+
+const EPSILONS: [f64; 5] = [1e-4, 1e-6, 1e-8, 1e-10, 1e-12];
 
 fn main() {
     let task = Task {
@@ -12,12 +14,29 @@ fn main() {
         beta: 0.4,
     };
 
-    let gradient = minimize_gradient(&task, 1e-6);
-    let heavy_ball = minimize_heavy_ball(&task, 1e-6);
-    let nesterov = minimize_nesterov(&task, 1e-9);
-    let newton = minimize_newton(&task, 1e-6);
-    println!("{:.8} in {} steps", gradient.min, gradient.steps);
-    println!("{:.8} in {} steps", heavy_ball.min, heavy_ball.steps);
-    println!("{:.10} in {} steps", nesterov.min, nesterov.steps);
-    println!("{:.8} in {} steps", newton.min, newton.steps);
+    examine(task)
+}
+
+fn examine(task: Task) {
+    for epsilon in EPSILONS {
+        println!("Current epsilon: {epsilon:e}");
+        let gradient = minimize_gradient(&task, epsilon);
+        let heavy_ball = minimize_heavy_ball(&task, epsilon);
+        let nesterov = minimize_nesterov(&task, epsilon);
+        let newton = minimize_newton(&task, epsilon);
+
+        examine_answer(gradient, epsilon);
+        examine_answer(heavy_ball, epsilon);
+        examine_answer(nesterov, epsilon);
+        examine_answer(newton, epsilon);
+    }
+}
+
+fn examine_answer(answer: Answer, epsilon: f64) {
+    println!(
+        "{:.*} in {} steps",
+        -epsilon.log10() as usize + 2,
+        answer.min,
+        answer.steps
+    );
 }

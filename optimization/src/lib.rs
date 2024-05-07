@@ -99,7 +99,6 @@ pub fn minimize_newton(task: &Task, epsilon: f64) -> Answer {
     let mut steps = 0;
     let mut points = vec![x.clone()];
     while x.forward_diff(&task.f).norm_max() > epsilon {
-        println!("{:?}", x.forward_hessian_nograd(&task.f));
         x = &x
             - x.forward_hessian_nograd(&task.f)
                 .inv()
