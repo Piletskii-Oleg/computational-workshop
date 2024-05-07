@@ -44,7 +44,8 @@ fn examine(task: Task) {
 
 fn examine_answer(answer: Answer, epsilon: f64) {
     println!(
-        "{:.*} in {} steps",
+        "{:?}: {:.*} in {} steps",
+        answer.method,
         -epsilon.log10() as usize + 2,
         answer.min,
         answer.steps

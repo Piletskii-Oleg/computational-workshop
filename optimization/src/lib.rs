@@ -2,6 +2,14 @@ use finitediff::FiniteDiff;
 use ndarray::Array1;
 use ndarray_linalg::{Inverse, Norm};
 
+#[derive(Debug)]
+pub enum Method {
+    Gradient,
+    HeavyBall,
+    Nesterov,
+    Newton,
+}
+
 pub struct Task {
     pub f: fn(&Array1<f64>) -> f64,
     pub start_point: Array1<f64>,
@@ -9,8 +17,8 @@ pub struct Task {
     pub beta: f64,
 }
 
-#[derive(Debug)]
 pub struct Answer {
+    pub method: Method,
     pub min: Array1<f64>,
     pub points: Vec<Array1<f64>>,
     pub steps: u32,
@@ -27,6 +35,7 @@ pub fn minimize_gradient(task: &Task, epsilon: f64) -> Answer {
     }
 
     Answer {
+        method: Method::Gradient,
         min: x,
         points,
         steps,
@@ -49,6 +58,7 @@ pub fn minimize_heavy_ball(task: &Task, epsilon: f64) -> Answer {
     }
 
     Answer {
+        method: Method::HeavyBall,
         min: next,
         points,
         steps,
@@ -88,6 +98,7 @@ pub fn minimize_nesterov(task: &Task, epsilon: f64) -> Answer {
     }
 
     Answer {
+        method: Method::Nesterov,
         min: y_next,
         points,
         steps,
@@ -109,6 +120,7 @@ pub fn minimize_newton(task: &Task, epsilon: f64) -> Answer {
     }
 
     Answer {
+        method: Method::Newton,
         min: x,
         points,
         steps,
