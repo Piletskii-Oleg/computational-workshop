@@ -1,6 +1,6 @@
 use ndarray::array;
 
-use optimization::{minimize_gradient, Task};
+use optimization::{minimize_gradient, minimize_heavy_ball, Task};
 
 fn main() {
     let task = Task {
@@ -9,6 +9,8 @@ fn main() {
         alpha: 0.3,
     };
 
-    let gradient = minimize_gradient(task, 1e-6);
-    println!("{gradient:.8?}");
+    let gradient = minimize_gradient(&task, 1e-6);
+    let heavy_ball = minimize_heavy_ball(&task, 1e-6, 0.8);
+    println!("{:.8} in {} steps", gradient.min, gradient.steps);
+    println!("{:.8} in {} steps", heavy_ball.min, heavy_ball.steps);
 }
