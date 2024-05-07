@@ -1,6 +1,6 @@
 use finitediff::FiniteDiff;
 use ndarray::Array1;
-use ndarray_linalg::Norm;
+use ndarray_linalg::{Inverse, Norm};
 
 pub struct Task {
     pub f: fn(&Array1<f64>) -> f64,
@@ -84,10 +84,33 @@ pub fn minimize_nesterov(task: &Task, epsilon: f64) -> Answer {
 
         points.push(x_next.clone());
         points.push(y_next.clone());
+        steps += 2;
     }
 
     Answer {
         min: y_next,
+        points,
+        steps,
+    }
+}
+
+pub fn minimize_newton(task: &Task, epsilon: f64) -> Answer {
+    let mut x = task.start_point.clone();
+    let mut steps = 0;
+    let mut points = vec![x.clone()];
+    while x.forward_diff(&task.f).norm_max() > epsilon {
+        println!("{:?}", x.forward_hessian_nograd(&task.f));
+        x = &x
+            - x.forward_hessian_nograd(&task.f)
+                .inv()
+                .unwrap()
+                .dot(&x.forward_diff(&task.f));
+        steps += 1;
+        points.push(x.clone());
+    }
+
+    Answer {
+        min: x,
         points,
         steps,
     }
