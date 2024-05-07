@@ -4,6 +4,7 @@ members = [
     "eigenvalues_partial_problem",
     "eigenvalues_problem",
     "grid_method",
+    "heat_equation",
     "iterative_methods",
     "matrices",
     "projection_methods",
