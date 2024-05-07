@@ -16,17 +16,17 @@ fn main() {
 
     // Вариант 2
     let equation = Equation {
-        p: |x: f64| (2.0 + x) / (3.0 + x),
-        q: |x: f64| -1.0 / ((3.0 + x).square()),
-        r: |x: f64| 1.0 + x.sin(),
-        f: |x: f64| 1.0 - x,
+        p: |x: f64| 1.0 / (x - 3.0),
+        q: |x: f64| 1.0 + x / 2.0,
+        r: |x: f64| -(x / 2.0).exp(),
+        f: |x: f64| 2.0 - x,
         a: 0.0,
         b: 0.0,
-        alpha1: 0.0,
-        alpha2: -1.0,
+        alpha1: 1.0,
+        alpha2: 0.0,
         alpha: 0.0,
         beta1: 1.0,
-        beta2: 1.0,
+        beta2: 0.0,
         beta: 0.0,
     };
 
@@ -42,8 +42,8 @@ fn draw_galerkin(equation: &Equation) {
     let mut galerkin_ctx = ChartBuilder::on(&function_root_area)
         .set_label_area_size(LabelAreaPosition::Left, 40)
         .set_label_area_size(LabelAreaPosition::Bottom, 40)
-        .caption("Ritz Method", ("sans-serif", 40))
-        .build_cartesian_2d(-1.0..1.0, 0.0..2.0)
+        .caption("Galerkin Method", ("sans-serif", 40))
+        .build_cartesian_2d(-1.0..1.0, -2.0..4.0)
         .unwrap();
     galerkin_ctx.configure_mesh().draw().unwrap();
 
@@ -118,11 +118,14 @@ fn draw_collocation(equation: &Equation) {
         .set_label_area_size(LabelAreaPosition::Left, 40)
         .set_label_area_size(LabelAreaPosition::Bottom, 40)
         .caption("Collocation Method", ("sans-serif", 40))
-        .build_cartesian_2d(-1.0..1.0, 0.0..2.0)
+        .build_cartesian_2d(-1.0..1.0, -2.0..2.0)
         .unwrap();
     collocation_ctx.configure_mesh().draw().unwrap();
 
-    for (n, color) in [64].into_iter().zip([BLACK]) {
+    for (n, color) in [2, 4, 8, 16, 32, 64]
+        .into_iter()
+        .zip([GREY, GREEN, RED, BROWN, BLUE, BLACK])
+    {
         let collocation = solve_collocation(equation, roots(n), orthogonal_system(n));
         collocation_ctx
             .draw_series(LineSeries::new(
@@ -151,20 +154,20 @@ fn roots(n: usize) -> Vec<f64> {
 }
 
 fn orthogonal_system(n: usize) -> Vec<OrthogonalFunction> {
-    let first = OrthogonalFunction {
-        function: Rc::new(|_| 1.0),
-        prime: Rc::new(|_| 0.0),
-        second_prime: Box::new(|_| 0.0),
-    };
+    // let first = OrthogonalFunction {
+    //     function: Rc::new(|_| 1.0),
+    //     prime: Rc::new(|_| 0.0),
+    //     second_prime: Box::new(|_| 0.0),
+    // };
+    //
+    // let second = OrthogonalFunction {
+    //     function: Rc::new(|x: f64| x),
+    //     prime: Rc::new(|_| 1.0),
+    //     second_prime: Box::new(|_| 0.0),
+    // };
 
-    let second = OrthogonalFunction {
-        function: Rc::new(|x: f64| x),
-        prime: Rc::new(|_| 1.0),
-        second_prime: Box::new(|_| 0.0),
-    };
-
-    let mut orthogonal_system = vec![first, second];
-    for i in 0..n - 2 {
+    let mut orthogonal_system = vec![];
+    for i in 0..n {
         orthogonal_system.push(jacobi(i));
     }
     orthogonal_system

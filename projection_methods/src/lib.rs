@@ -66,7 +66,7 @@ pub fn solve_galerkin(
                     + (equation.q)(x) * (orthogonal_system[j].prime)(x)
                     + (equation.r)(x) * (orthogonal_system[j].function)(x))
         };
-        peroxide::numerical::integral::integrate(integral, (-1.0, 1.0), Integral::GaussLegendre(30))
+        peroxide::numerical::integral::integrate(integral, (-1.0, 1.0), Integral::GaussLegendre(20))
     });
 
     let vector = (0..n)
@@ -75,7 +75,7 @@ pub fn solve_galerkin(
             peroxide::numerical::integral::integrate(
                 integral,
                 (-1.0, 1.0),
-                Integral::GaussLegendre(30),
+                Integral::GaussLegendre(20),
             )
         })
         .collect::<Array1<f64>>();
