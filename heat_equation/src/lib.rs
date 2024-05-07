@@ -64,7 +64,7 @@ pub fn solve_implicit(equation: &Equation, n: usize, m: usize) -> Solution {
     let x_grid = Array1::linspace(0.0, equation.a, n + 1);
     let t_grid = Array1::linspace(0.0, equation.T, m + 1);
 
-    let h = equation.a / n as f64;
+    let _h = equation.a / n as f64;
     let tau = equation.T / m as f64;
 
     let mut solution = Array2::zeros((m + 1, n + 1).f());

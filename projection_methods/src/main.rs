@@ -1,7 +1,6 @@
 use std::f64::consts::PI;
 use std::rc::Rc;
 
-use ndarray_linalg::Scalar;
 use plotters::prelude::full_palette::GREY;
 use plotters::prelude::*;
 use plotters::style::full_palette::BROWN;
@@ -51,7 +50,7 @@ fn draw_galerkin(equation: &Equation) {
         .into_iter()
         .zip([GREY, GREEN, RED, BROWN, BLUE, BLACK])
     {
-        let galerkin = solve_galerkin(&equation, orthogonal_system(n));
+        let galerkin = solve_galerkin(equation, orthogonal_system(n));
         galerkin_ctx
             .draw_series(LineSeries::new(
                 (-10000..=10000)
@@ -66,8 +65,8 @@ fn draw_galerkin(equation: &Equation) {
 
     galerkin_ctx
         .configure_series_labels()
-        .border_style(&BLACK)
-        .background_style(&WHITE.mix(0.8))
+        .border_style(BLACK)
+        .background_style(WHITE.mix(0.8))
         .draw()
         .unwrap();
 }
@@ -88,7 +87,7 @@ fn draw_ritz(equation: &Equation) {
         .into_iter()
         .zip([GREY, GREEN, RED, BROWN, BLUE, BLACK])
     {
-        let ritz = solve_ritz(&equation, orthogonal_system(n));
+        let ritz = solve_ritz(equation, orthogonal_system(n));
         ritz_ctx
             .draw_series(LineSeries::new(
                 (-10000..=10000)
@@ -103,8 +102,8 @@ fn draw_ritz(equation: &Equation) {
 
     ritz_ctx
         .configure_series_labels()
-        .border_style(&BLACK)
-        .background_style(&WHITE.mix(0.8))
+        .border_style(BLACK)
+        .background_style(WHITE.mix(0.8))
         .draw()
         .unwrap();
 }
@@ -141,8 +140,8 @@ fn draw_collocation(equation: &Equation) {
 
     collocation_ctx
         .configure_series_labels()
-        .border_style(&BLACK)
-        .background_style(&WHITE.mix(0.8))
+        .border_style(BLACK)
+        .background_style(WHITE.mix(0.8))
         .draw()
         .unwrap();
 }

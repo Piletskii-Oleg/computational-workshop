@@ -24,7 +24,7 @@ pub fn solve_ritz(
     let n = orthogonal_system.len();
     let matrix = generate_matrix(n, |i, j| {
         bilinear_form(
-            &equation,
+            equation,
             (
                 orthogonal_system[i].function.clone(),
                 orthogonal_system[j].function.clone(),

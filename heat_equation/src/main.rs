@@ -48,9 +48,9 @@ fn draw_solution(file: &str, solution: Solution) {
     let m = solution.approximate_solution.nrows();
     let mut data = vec![];
 
-    for i in (0..n) {
+    for i in 0..n {
         let mut row = vec![];
-        for j in (0..m) {
+        for j in 0..m {
             row.push((
                 solution.x_grid[i],
                 solution.approximate_solution[(j, i)],
@@ -73,7 +73,7 @@ fn draw_solution(file: &str, solution: Solution) {
                             data[x + 1][z + 1],
                             data[x][z + 1],
                         ],
-                        &BLUE.mix(0.3),
+                        BLUE.mix(0.3),
                     )
                 }),
         )
