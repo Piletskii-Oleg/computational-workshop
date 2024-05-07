@@ -6,7 +6,7 @@ members = [
     "grid_method",
     "heat_equation",
     "iterative_methods",
-    "matrices",
+    "matrices", "optimization",
     "projection_methods",
     "qr_decomposition"
 ]
