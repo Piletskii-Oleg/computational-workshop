@@ -7,7 +7,7 @@ use heat_equation::{solve_explicit, solve_implicit, Equation, Solution};
 
 fn main() {
     let equation = Equation {
-        kappa: 1.0 / PI.square(),
+        kappa: 2.0 / PI.square(),
         f: |(x, t)| 0.0,
         a: 1.0,
         T: 1.0,
@@ -16,7 +16,7 @@ fn main() {
         mu2: |_| 0.0,
     };
 
-    let explicit = solve_explicit(&equation, 15, 30);
+    let explicit = solve_explicit(&equation, 15, 30); // raise n
     let implicit = solve_implicit(&equation, 20, 30);
     draw_solution("explicit_solution", explicit);
     draw_solution("implicit_solution", implicit);

@@ -41,7 +41,7 @@ fn main() {
     let mut error_ctx = ChartBuilder::on(&err_root_area)
         .set_label_area_size(LabelAreaPosition::Left, 40)
         .set_label_area_size(LabelAreaPosition::Bottom, 40)
-        .caption("Line Plot Demo", ("sans-serif", 40))
+        .caption("Error to grid size ratio", ("sans-serif", 40))
         .build_cartesian_2d(
             (*min_size as u32..(max_size * 100) as u32).log_scale(),
             (0.0..max_error * 1.01).log_scale(),
@@ -59,20 +59,4 @@ fn main() {
             &GREEN,
         ))
         .unwrap();
-
-    // let function_root_area = SVGBackend::new("task_7_func.svg", (600, 400))
-    //     .into_drawing_area();
-    // function_root_area.fill(&WHITE).unwrap();
-    //
-    // let mut function_ctx = ChartBuilder::on(&function_root_area)
-    //     .set_label_area_size(LabelAreaPosition::Left, 40)
-    //     .set_label_area_size(LabelAreaPosition::Bottom, 40)
-    //     .caption("Line Plot Demo", ("sans-serif", 40))
-    //     .build_cartesian_2d(0..100, 0.0..100.0)
-    //     .unwrap();
-    // function_ctx.configure_mesh().draw().unwrap();
-    //
-    // function_ctx.draw_series(
-    //     LineSeries::new((0..100).zip(solution.u.iter().cloned()), &RED)
-    // ).unwrap();
 }
